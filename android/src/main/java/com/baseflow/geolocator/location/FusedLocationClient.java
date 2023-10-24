@@ -202,7 +202,7 @@ class FusedLocationClient implements LocationClient {
   }
 
   private static LocationRequest buildLocationRequest(@Nullable LocationOptions options) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+    if (Build.VERSION.SDK_INT < 33) {
       return buildLocationRequestDeprecated(options);
     }
 
