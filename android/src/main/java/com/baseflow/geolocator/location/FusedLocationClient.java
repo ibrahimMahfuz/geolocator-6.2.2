@@ -13,8 +13,18 @@ import com.baseflow.geolocator.errors.ErrorCallback;
 import com.baseflow.geolocator.errors.ErrorCodes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.*;
-import android.location.LocationRequest;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.location.SettingsClient;
 import java.util.Random;
 
 class FusedLocationClient implements LocationClient {
@@ -191,14 +201,34 @@ class FusedLocationClient implements LocationClient {
   }
 
   private static LocationRequest buildLocationRequest(@Nullable LocationOptions options) {
-    if (options != null) {
-      return LocationRequest.Builder(toPriority(options.getAccuracy()), options.getTimeInterval())
-              .setWaitForAccurateLocation(false)
-              .setMinUpdateDistanceMeters((float) options.getDistanceFilter())
-              .build();
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+      return buildLocationRequestDeprecated(options);
     }
 
-    return LocationRequest.Builder(toPriority(options.getAccuracy()), options.getTimeInterval());
+    LocationRequest.Builder builder = new LocationRequest.Builder(0);
+
+    if (options != null) {
+      builder.setPriority(toPriority(options.getAccuracy()));
+      builder.setIntervalMillis(options.getTimeInterval());
+      builder.setMinUpdateIntervalMillis(options.getTimeInterval());
+      builder.setMinUpdateDistanceMeters(options.getDistanceFilter());
+    }
+
+    return builder.build();
+  }
+
+  @SuppressWarnings("deprecation")
+  private static LocationRequest buildLocationRequestDeprecated(@Nullable LocationOptions options) {
+    LocationRequest locationRequest = LocationRequest.create();
+
+    if (options != null) {
+      locationRequest.setPriority(toPriority(options.getAccuracy()));
+      locationRequest.setInterval(options.getTimeInterval());
+      locationRequest.setFastestInterval(options.getTimeInterval() / 2);
+      locationRequest.setSmallestDisplacement(options.getDistanceFilter());
+    }
+
+    return locationRequest;
   }
 
   private static LocationSettingsRequest buildLocationSettingsRequest(
