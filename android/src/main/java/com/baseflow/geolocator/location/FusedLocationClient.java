@@ -200,7 +200,7 @@ class FusedLocationClient implements LocationClient {
       .setSmallestDisplacement(options.getDistanceFilter());
     }
 
-    return LocationRequest locationRequest = LocationRequest.create();
+    return LocationRequest.create();
   }
 
   private static LocationSettingsRequest buildLocationSettingsRequest(
