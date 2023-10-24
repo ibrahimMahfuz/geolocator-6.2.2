@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.IntentSender;
 import android.location.Location;
+import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -239,7 +240,7 @@ class FusedLocationClient implements LocationClient {
     return builder.build();
   }
 
-  private static long toPriority(LocationAccuracy locationAccuracy) {
+  private static int toPriority(LocationAccuracy locationAccuracy) {
     switch (locationAccuracy) {
       case lowest:
         return 105; // PRIORITY_PASSIVE
