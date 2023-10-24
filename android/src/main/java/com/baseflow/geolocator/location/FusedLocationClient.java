@@ -190,16 +190,17 @@ class FusedLocationClient implements LocationClient {
   }
 
   private static LocationRequest buildLocationRequest(@Nullable LocationOptions options) {
-    LocationRequest locationRequest = new LocationRequest();
+
 
     if (options != null) {
-      locationRequest.setPriority(toPriority(options.getAccuracy()));
-      locationRequest.setInterval(options.getTimeInterval());
-      locationRequest.setFastestInterval(options.getTimeInterval() / 2);
-      locationRequest.setSmallestDisplacement(options.getDistanceFilter());
+      LocationRequest.create()
+      .setPriority(toPriority(options.getAccuracy()))
+      .setInterval(options.getTimeInterval())
+      .setFastestInterval(options.getTimeInterval() / 2)
+      .setSmallestDisplacement(options.getDistanceFilter());
     }
 
-    return locationRequest;
+    return LocationRequest locationRequest = LocationRequest.create();
   }
 
   private static LocationSettingsRequest buildLocationSettingsRequest(
