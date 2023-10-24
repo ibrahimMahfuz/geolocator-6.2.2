@@ -14,6 +14,7 @@ import com.baseflow.geolocator.errors.ErrorCodes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
+import android.location.LocationRequest;
 import java.util.Random;
 
 class FusedLocationClient implements LocationClient {
