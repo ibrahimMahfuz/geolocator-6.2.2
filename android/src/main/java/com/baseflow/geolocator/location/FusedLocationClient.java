@@ -191,9 +191,9 @@ class FusedLocationClient implements LocationClient {
 
   private static LocationRequest buildLocationRequest(@Nullable LocationOptions options) {
     if (options != null) {
-      return LocationRequest.Builder(toPriority(options.getAccuracy()), options.getTimeInterval())
+      return LocationRequest.Builder(toPriority(options.getAccuracy()), (long) options.getTimeInterval())
               .setWaitForAccurateLocation(false)
-              .setMinUpdateDistanceMeters(options.getDistanceFilter())
+              .setMinUpdateDistanceMeters((float) options.getDistanceFilter())
               .build();
     }
 
