@@ -190,17 +190,14 @@ class FusedLocationClient implements LocationClient {
   }
 
   private static LocationRequest buildLocationRequest(@Nullable LocationOptions options) {
-
-
     if (options != null) {
-      LocationRequest.create()
-      .setPriority(toPriority(options.getAccuracy()))
-      .setInterval(options.getTimeInterval())
-      .setFastestInterval(options.getTimeInterval() / 2)
-      .setSmallestDisplacement(options.getDistanceFilter());
+      return LocationRequest.Builder(toPriority(options.getAccuracy()), options.getTimeInterval())
+              .setWaitForAccurateLocation(false)
+              .setMinUpdateDistanceMeters(options.getDistanceFilter())
+              .build();
     }
 
-    return LocationRequest.create();
+    return LocationRequest.Builder(toPriority(options.getAccuracy()), options.getTimeInterval());
   }
 
   private static LocationSettingsRequest buildLocationSettingsRequest(
@@ -214,13 +211,13 @@ class FusedLocationClient implements LocationClient {
   private static int toPriority(LocationAccuracy locationAccuracy) {
     switch (locationAccuracy) {
       case lowest:
-        return LocationRequest.PRIORITY_NO_POWER;
+        return 105; // PRIORITY_PASSIVE
       case low:
-        return LocationRequest.PRIORITY_LOW_POWER;
+        return 104; // PRIORITY_LOW_POWER
       case medium:
-        return LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+        return 102; // PRIORITY_BALANCED_POWER_ACCURACY
       default:
-        return LocationRequest.PRIORITY_HIGH_ACCURACY;
+        return 100; // PRIORITY_HIGH_ACCURACY
     }
   }
 }
